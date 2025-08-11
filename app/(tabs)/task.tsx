@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { ApiService, UserDto } from '@/api';
-import ParallaxFlatList from '@/components/ParallaxFlatList';
+import { ParallaxFlatList } from '@/components/parallax';
 
 const keyExtractor = (item: UserDto) => item.id.toString();
 
