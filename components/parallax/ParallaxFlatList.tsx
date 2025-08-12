@@ -16,6 +16,16 @@ export default function ParallaxFlatList(props: Props) {
   const bottomTab = useBottomTabOverflow();
   const { bottom } = useSafeAreaInsets();
 
+  const {
+    headerImage,
+    headerComponent,
+    headerBackgroundColor,
+    renderItem,
+    CellRendererComponent,
+    data,
+    ...flatListProps
+  } = props;
+
   const { scrollHandler, renderHeader, renderStatusBar } = useParallax({
     headerImage: props.headerImage,
     headerBackgroundColor: props.headerBackgroundColor,
@@ -29,15 +39,18 @@ export default function ParallaxFlatList(props: Props) {
         itemLayoutAnimation={LinearTransition}
         scrollEventThrottle={16}
         scrollIndicatorInsets={{ bottom: bottomTab }}
-        contentContainerStyle={{ paddingBottom: bottomTab + bottom }}
-        renderItem={props.renderItem}
-        data={props.data}
+        contentContainerStyle={{ paddingBottom: bottomTab + bottom + 15 }}
+        renderItem={renderItem}
+        data={data}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator
         ListHeaderComponent={
           <View>
             {renderHeader()}
             {props.headerComponent}
           </View>
         }
+        {...flatListProps}
       />
     </View>
   );

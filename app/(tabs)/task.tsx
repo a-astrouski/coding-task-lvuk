@@ -36,6 +36,11 @@ export default function TabTwoScreen() {
       data={filteredUsers}
       renderItem={renderUser}
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
+      removeClippedSubviews
+      maxToRenderPerBatch={10}
+      windowSize={10}
+      initialNumToRender={10}
+      updateCellsBatchingPeriod={50}
       headerComponent={
         <View style={styles.headerContainer}>
           <Text style={[styles.headerTitle, { color: Colors[colorScheme].text }]}>Users</Text>
