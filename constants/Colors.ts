@@ -9,6 +9,7 @@ const tintColorDark = '#fff';
 export const Colors = {
   light: {
     text: '#11181C',
+    secondaryText: '#687076',
     placeholder: '#9BA1A6',
     background: '#fff',
     tint: tintColorLight,
@@ -19,6 +20,7 @@ export const Colors = {
   },
   dark: {
     text: '#ECEDEE',
+    secondaryText: '#9BA1A6',
     placeholder: '#9BA1A6',
     background: '#151718',
     tint: tintColorDark,
