@@ -1,55 +1,56 @@
-import { StyleSheet, FlatList, Text, TextInput, View} from 'react-native';
-import React, { useEffect, useState } from 'react';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { ApiService, UserDto } from '@/api';
+import { ParallaxFlatList } from '@/components/parallax';
+import UserCard from '@/components/UserCard';
+import SearchInput from '@/components/SearchInput';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
+
+const keyExtractor = (item: UserDto) => item.id.toString();
 
 export default function TabTwoScreen() {
-  const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  const [query, setQuery] = useState("");
+  const [users, setUsers] = useState<UserDto[]>([]);
+  const [query, setQuery] = useState('');
+
+  const colorScheme = useColorScheme() ?? 'light';
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
-  });
+    ApiService.users.getUsers().then(setUsers);
+  }, []);
 
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((res) => res.json())
-      .then((data) => {
-        const filtered = data.filter((user) =>
-          user.name.toLowerCase().includes(query.toLowerCase())
-        );
-        setFilteredUsers(filtered);
-      });
-  }, [query]); 
+  const filteredUsers = useMemo(() => {
+    return users.filter(userProfile => userProfile.name.toLowerCase().includes(query.toLowerCase()));
+  }, [query, users]);
+
+  const onXmarkPress = useCallback(() => {
+    setQuery('');
+  }, []);
+
+  const renderUser = useCallback(({ item }: { item: UserDto }) => <UserCard item={item} />, []);
 
   return (
-    <ParallaxScrollView
+    <ParallaxFlatList
+      keyExtractor={keyExtractor}
+      data={filteredUsers}
+      renderItem={renderUser}
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="brain.head.profile.fill"
-          style={styles.headerImage}
-        />
-      }>
-       <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          value={query}
-          onChangeText={setQuery}
-          placeholder="Search users..."
-        />
+      removeClippedSubviews
+      maxToRenderPerBatch={10}
+      windowSize={10}
+      initialNumToRender={10}
+      updateCellsBatchingPeriod={50}
+      headerComponent={
+        <View style={styles.headerContainer}>
+          <Text style={[styles.headerTitle, { color: Colors[colorScheme].text }]}>Users</Text>
+          <SearchInput value={query} onChangeText={setQuery} onButtonPress={onXmarkPress} />
         </View>
-        <FlatList
-          data={filteredUsers}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => <Text style={styles.user}>{item.name}</Text>}
-        />
-    </ParallaxScrollView>
+      }
+      headerImage={
+        <IconSymbol size={310} color="#808080" name="brain.head.profile.fill" style={styles.headerImage} />
+      }
+    />
   );
 }
 
@@ -60,8 +61,13 @@ const styles = StyleSheet.create({
     left: -35,
     position: 'absolute',
   },
-  container: {
-    flexDirection: 'row',
-    gap: 8,
+  headerContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 16,
   },
 });
