@@ -12,7 +12,7 @@ type Props = {
   headerBackgroundColor: { dark: string; light: string };
 } & FlatListProps<any>;
 
-export default function ParallaxFlatList(props: Props) {
+function ParallaxFlatList(props: Props) {
   const bottomTab = useBottomTabOverflow();
   const { bottom } = useSafeAreaInsets();
 
@@ -55,6 +55,8 @@ export default function ParallaxFlatList(props: Props) {
     </View>
   );
 }
+
+export default React.memo(ParallaxFlatList);
 
 const styles = StyleSheet.create({
   container: {

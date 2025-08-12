@@ -8,7 +8,7 @@ type Props = {
   item: UserDto;
 };
 
-export default function UserCard(props: Props) {
+function UserCard(props: Props) {
   const colorScheme = useColorScheme() ?? 'light';
 
   return (
@@ -31,6 +31,8 @@ export default function UserCard(props: Props) {
     </View>
   );
 }
+
+export default React.memo(UserCard);
 
 const styles = StyleSheet.create({
   userCard: {

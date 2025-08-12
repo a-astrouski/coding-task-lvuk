@@ -10,7 +10,7 @@ type Props = {
   onButtonPress: () => void;
 };
 
-export default function SearchInput(props: Props) {
+function SearchInput(props: Props) {
   const colorScheme = useColorScheme() ?? 'light';
 
   return (
@@ -40,6 +40,8 @@ export default function SearchInput(props: Props) {
     </View>
   );
 }
+
+export default React.memo(SearchInput);
 
 const styles = StyleSheet.create({
   searchContainer: {
